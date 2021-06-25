@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "913787017671",
+    "project_id": "app-contatissimos",
+    "storage_bucket": "app-contatissimos.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:913787017671:android:1f9aad9b4d34fed8e2a1e2",
+        "android_client_info": {
+          "package_name": "com.darayve.contatissimos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "913787017671-auc0rr22va6a7ma2aj5sqhf3e6ccacaa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA78rRhbuH7pCsNr8cj3iULjrxR7MWv10o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "913787017671-auc0rr22va6a7ma2aj5sqhf3e6ccacaa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
