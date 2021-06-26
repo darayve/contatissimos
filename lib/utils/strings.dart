@@ -13,11 +13,11 @@ const appNewContactTitle = 'Novo contato';
 const searchButtonTooltip = 'Procurar contato';
 
 // About buttons
-const addNewContact = 'NOVO CONTATO';
+const addNewContact = 'Novo contato';
 const updateContactList = 'ATUALIZAR LISTA';
-const saveNewContact = 'SALVAR';
+const saveContact = 'SALVAR';
 const cancelNewContact = 'CANCELAR';
-const removeContact = 'Remover';
+const removeContact = 'REMOVER';
 
 // About contact
 const nome = 'Nome';
