@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
+
 import 'package:contatissimos/utils/constants.dart' as constants;
 
 class ContactTile extends StatelessWidget {
-  ContactTile({this.contactPhoto, this.apelido, this.onTap});
+  ContactTile({this.contactPhoto, this.apelido, this.onTap, this.telefone});
 
   final CircleAvatar contactPhoto;
   final String apelido;
   final Function onTap;
+  final String telefone;
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +50,7 @@ class ContactTile extends StatelessWidget {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () {
-                    print('Enable phone call');
-                  },
+                  onTap: () => {UrlLauncher.launch('tel:$telefone')},
                   child: Icon(
                     Icons.phone,
                     color: constants.secondary,
