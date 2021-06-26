@@ -1,14 +1,14 @@
-import 'package:contatissimos/components/wrap_container.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:contatissimos/components/contact_tile.dart';
+import 'package:contatissimos/components/wrap_container.dart';
+import 'package:contatissimos/screens/contact_info_screen.dart';
+import 'package:contatissimos/screens/new_contact_screen.dart';
+
 import 'package:contatissimos/utils/constants.dart' as constants;
 import 'package:contatissimos/utils/strings.dart' as strings;
-import 'package:contatissimos/utils/fakeJSON.dart' as contacts_JSON;
-
-import 'new_contact_screen.dart';
 
 class ContactsScreen extends StatefulWidget {
   static final String screenId = 'contacts_screen';
@@ -18,45 +18,19 @@ class ContactsScreen extends StatefulWidget {
 }
 
 class _ContactsScreenState extends State<ContactsScreen> {
-  List<Widget> _itemList = [];
+  final _firestore = FirebaseFirestore.instance;
 
-  @override
-  void initState() {
-    super.initState();
-    setState(() {
-      showContacts(contacts_JSON
-          .MyContacts); // TODO: trocar para JSON que retorna do Firebase
-    });
-  }
-
-  void showContacts(dynamic json) {
-    for (int i = 0; i < json.length; i++) {
-      // TODO: implementar for in
-      var apelido;
-
-      apelido = json[i]["apelido"];
-
-      _itemList.add(ContactTile(
-        leading: Icon(Icons.account_circle),
-        trailing: Icon(Icons.phone),
-        title: apelido,
-      ));
-
-      _itemList.add(SizedBox(height: 10));
-
-      setState(() {});
-    }
-  }
-
-  void clearList(list) {
-    list = [];
-  }
-
-  var _myContacts = contacts_JSON.MyContacts;
   @override
   Widget build(BuildContext context) {
     return WrapContainer(
       child: Scaffold(
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.pushNamed(context, NewContactScreen.screenId);
+          },
+          label: Text(strings.addNewContact),
+          icon: Icon(Icons.add),
+        ),
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           backgroundColor: constants.primary,
@@ -66,46 +40,53 @@ class _ContactsScreenState extends State<ContactsScreen> {
           padding: const EdgeInsets.all(constants.wrapContainerPadding),
           child: Column(
             children: [
-              Expanded(
-                child: ListView(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  children: _itemList,
-                ),
+              StreamBuilder<QuerySnapshot>(
+                stream: _firestore.collection('contatos').snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return CircularProgressIndicator(
+                      backgroundColor: constants.primaryLight,
+                    );
+                  } else {
+                    final contatos = snapshot.data.docs;
+                    List<ContactTile> contatosWidgets = [];
+
+                    for (var contato in contatos) {
+                      final nome = contato.get('nome');
+                      final apelido = contato.get('apelido');
+                      final telefone = contato.get('telefone');
+
+                      final contatoWidget = ContactTile(
+                        contactPhoto: CircleAvatar(
+                          backgroundColor: constants.primaryLight,
+                          backgroundImage: NetworkImage(
+                              'https://gameforge.com/de-DE/littlegames/includes/images/games/8581_5eb3edf2afb29.jpg'),
+                        ),
+                        apelido: apelido,
+                        telefone: telefone,
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return ContactInfo(
+                              name: nome,
+                              nickname: apelido,
+                              phone: telefone,
+                            );
+                          }));
+                        },
+                      );
+                      contatosWidgets.add(contatoWidget);
+                    }
+                    return Expanded(
+                      child: ListView(
+                        children: contatosWidgets,
+                      ),
+                    );
+                  }
+                },
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        primary: constants.primary,
-                        textStyle:
-                            TextStyle(fontSize: constants.buttonFontSize),
-                      ),
-                      onPressed: () {
-                        print(
-                            'shalshjdk'); // TODO: implementar função que atualiza lista de contatos
-                      },
-                      child: Text(strings.updateContactList),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Expanded(
-                    child: ElevatedButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: constants.primary,
-                        textStyle:
-                            TextStyle(fontSize: constants.buttonFontSize),
-                      ),
-                      onPressed: () {
-                        Navigator.pushNamed(context, NewContactScreen.screenId);
-                      },
-                      child: Text(strings.addNewContact),
-                    ),
-                  ),
-                ],
+              SizedBox(
+                width: 10,
               ),
             ],
           ),
@@ -114,8 +95,3 @@ class _ContactsScreenState extends State<ContactsScreen> {
     );
   }
 }
-/*
-String x = "Stephen Ricard";
-String[] nameparts = x.split(" ");
-String initials = nameparts[0].charAt(0).toUpperCase()+nameparts[1].charAt(0).toUpperCase();
- */

@@ -43,7 +43,7 @@ class ContatissimosApp extends StatelessWidget {
           );
         }
         // Otherwise, show something whilst waiting for initialization to complete
-        return Text(strings.loadingText);
+        return CircularProgressIndicator();
       },
     );
   }

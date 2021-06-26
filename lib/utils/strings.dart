@@ -14,10 +14,10 @@ const searchButtonTooltip = 'Procurar contato';
 
 // About buttons
 const addNewContact = 'Novo contato';
-const updateContactList = 'Atualizar lista';
-const saveNewContact = 'SALVAR';
+const updateContactList = 'ATUALIZAR LISTA';
+const saveContact = 'SALVAR';
 const cancelNewContact = 'CANCELAR';
-const removeContact = 'Remover';
+const removeContact = 'REMOVER';
 
 // About contact
 const nome = 'Nome';
