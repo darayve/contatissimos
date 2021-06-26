@@ -1,16 +1,21 @@
-import 'package:contatissimos/screens/contacts_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../utils/constants.dart' as constants;
-import '../utils/strings.dart' as strings;
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+
+import 'package:contatissimos/utils/constants.dart' as constants;
+import 'package:contatissimos/utils/strings.dart' as strings;
 
 import 'package:contatissimos/components/wrap_container.dart';
+import '../utils/ContactsHandler.dart';
 
 class NewContactScreen extends StatelessWidget {
   static final String screenId = 'edit_contact_screen';
 
   String nome, apelido, telefone;
+
+  var maskFormatter = new MaskTextInputFormatter(
+      mask: '(##) #####-####', filter: {"#": RegExp(r'[0-9]')});
 
   @override
   Widget build(BuildContext context) {
@@ -35,26 +40,33 @@ class NewContactScreen extends StatelessWidget {
                 children: [
                   TextField(
                     decoration: InputDecoration(
-                      labelText: 'Nome',
+                      labelText: strings.nome,
                       labelStyle: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     onChanged: (value) {
-                      //
+                      nome = value;
                     },
                   ),
                   TextField(
                     decoration: InputDecoration(
-                      labelText: 'Apelido',
+                      labelText: strings.apelido,
                       labelStyle: TextStyle(fontWeight: FontWeight.bold),
                     ),
+                    onChanged: (value) {
+                      apelido = value;
+                    },
                   ),
                   TextField(
                     keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
-                      labelText: 'Telefone',
+                      labelText: strings.telefone,
                       labelStyle: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                  )
+                    inputFormatters: [maskFormatter],
+                    onChanged: (value) {
+                      telefone = value;
+                    },
+                  ),
                 ],
               ),
               Row(
@@ -69,9 +81,9 @@ class NewContactScreen extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        Navigator.pushNamed(context, ContactsScreen.screenId);
+                        Navigator.pop(context);
                       },
-                      child: Text(strings.cancelNewContact.toUpperCase()),
+                      child: Text(strings.cancelNewContact),
                     ),
                   ),
                   Expanded(
@@ -83,9 +95,10 @@ class NewContactScreen extends StatelessWidget {
                             fontWeight: FontWeight.bold),
                       ),
                       onPressed: () {
-                        print('jjj'); // TODO: implementar função de salvar
+                        ContactsHandler.addNewContact(nome, apelido, telefone);
+                        Navigator.pop(context);
                       },
-                      child: Text(strings.saveNewContact.toUpperCase()),
+                      child: Text(strings.saveContact),
                     ),
                   ),
                 ],
@@ -97,11 +110,3 @@ class NewContactScreen extends StatelessWidget {
     );
   }
 }
-
-/*
-Foto de perfil
-Apelido ao lado direito da foto
-3 campos: nome, apelido, telefone
-
-botão salvar, cancelar e remover contato
- */
